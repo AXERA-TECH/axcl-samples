@@ -28,12 +28,7 @@ function(axera_example example_name)
 
     # opencv
     target_link_libraries(${example_name} PRIVATE ${OpenCV_LIBS})
-    if (WIN32)
-        target_link_libraries(${example_name} PRIVATE axcl_pcie_dma axcl_pcie_msg axcl_token axcl_comm axcl_pkg axcl_rt)
-    else()
-        target_link_libraries(${example_name} PRIVATE spdlog axcl_pcie_dma axcl_pcie_msg axcl_token axcl_comm axcl_pkg axcl_rt)
-    endif()
-
+    target_link_libraries(${example_name} PRIVATE axcl_rt)
     target_compile_options (${example_name} PUBLIC $<$<COMPILE_LANGUAGE:C,CXX>: -O3>)
 
     install(TARGETS ${example_name} DESTINATION bin)

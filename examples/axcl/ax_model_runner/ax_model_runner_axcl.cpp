@@ -54,24 +54,27 @@ static void print_io_info(std::vector<ax_runner_tensor_t> &input, std::vector<ax
 
 static bool read_file(const char *fn, std::vector<unsigned char> &data)
 {
-    FILE *fp = fopen(fn, "r");
-    if (fp != nullptr)
-    {
-        fseek(fp, 0L, SEEK_END);
-        auto len = ftell(fp);
-        fseek(fp, 0, SEEK_SET);
-        data.clear();
-        size_t read_size = 0;
-        if (len > 0)
-        {
-            data.resize(len);
-            read_size = fread(data.data(), 1, len, fp);
-        }
-        fclose(fp);
-        return read_size == (size_t)len;
-    }
-    return false;
+    FILE *fp = fopen(fn, "rb");  // 关键：rb
+    if (!fp) return false;
+
+    if (fseek(fp, 0, SEEK_END) != 0) { fclose(fp); return false; }
+    long len = ftell(fp);
+    if (len < 0) { fclose(fp); return false; }
+    if (fseek(fp, 0, SEEK_SET) != 0) { fclose(fp); return false; }
+
+    data.clear();
+    data.resize((size_t)len);
+
+    size_t read_size = 0;
+    if (len > 0)
+        read_size = fread(data.data(), 1, (size_t)len, fp);
+
+    fclose(fp);
+
+    // 空文件 len==0 时也应该算成功
+    return read_size == (size_t)len;
 }
+
 
 typedef struct
 {
