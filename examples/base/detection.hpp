@@ -3127,6 +3127,70 @@ namespace detection
             }
         }
     }
+
+    static void generate_proposals_yolo26(int stride, const float* feat, const float* feat_cls, float prob_threshold, std::vector<Object>& objects,
+                                          int letterbox_cols, int letterbox_rows, int cls_num = 80)
+    {
+        const int feat_w = letterbox_cols / stride;
+        const int feat_h = letterbox_rows / stride;
+
+        const float p = std::min(std::max(prob_threshold, 1e-6f), 1.f - 1e-6f);
+        const float conf_raw = std::log(p / (1.f - p));
+
+        for (int h = 0; h < feat_h; ++h)
+        {
+            for (int w = 0; w < feat_w; ++w)
+            {
+                int best_c = 0;
+                float best_logit = -FLT_MAX;
+                const float* cls_ptr = feat_cls + (h * feat_w + w) * cls_num;
+                for (int c = 0; c < cls_num; ++c)
+                {
+                    float v = cls_ptr[c];
+                    if (v > best_logit)
+                    {
+                        best_logit = v;
+                        best_c = c;
+                    }
+                }
+
+                if (best_logit < conf_raw)
+                {
+                    continue;
+                }
+
+                const float score = sigmoid(best_logit);
+
+                const float* box_ptr = feat + (h * feat_w + w) * 4;
+                const float l = box_ptr[0];
+                const float t = box_ptr[1];
+                const float r = box_ptr[2];
+                const float b = box_ptr[3];
+
+                const float cx = (w + 0.5f) * stride;
+                const float cy = (h + 0.5f) * stride;
+
+                float x0 = (cx - l * stride);
+                float y0 = (cy - t * stride);
+                float x1 = (cx + r * stride);
+                float y1 = (cy + b * stride);
+
+                x0 = std::max(0.f, std::min(x0, (float)(letterbox_cols - 1)));
+                y0 = std::max(0.f, std::min(y0, (float)(letterbox_rows - 1)));
+                x1 = std::max(0.f, std::min(x1, (float)(letterbox_cols - 1)));
+                y1 = std::max(0.f, std::min(y1, (float)(letterbox_rows - 1)));
+
+                Object obj;
+                obj.rect.x = x0;
+                obj.rect.y = y0;
+                obj.rect.width = x1 - x0;
+                obj.rect.height = y1 - y0;
+                obj.label = best_c;
+                obj.prob = score;
+                objects.push_back(obj);
+            }
+        }
+    }
     
 } // namespace detection
 
