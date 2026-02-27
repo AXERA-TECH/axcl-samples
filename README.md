@@ -1,3 +1,5 @@
+[English](./README_EN.md) | 简体中文
+
 # axcl-samples
 
 ## 简介
@@ -8,10 +10,15 @@
 
 - Ubuntu
 - Debian
+- Windows 11
 
 ### 支持板卡
 
-- M.2 2280
+| 板卡 | 图片 | 芯片 | 厂商 | 链接 |
+| ---- | ---- | ---- | ---- | ---- |
+| AI Core AX-M1 | <img src="docs/boards/aicore_ax_m1_top.jpg" width="200"> | AX650N | Radxa | [文档](https://docs.radxa.com/en/aicore/ax-m1) |
+| M4Chat | <img src="docs/boards/m4chat.jpg" width="200"> | AX8850 | Sipeed | [Wiki](https://wiki.sipeed.com/hardware/zh/maixIV/m4chat/intro.html) |
+| LLM-8850 Card | <img src="docs/boards/AI-001_LLM-8850-main-pictures_01.jpg" width="200"> | AX8850 | M5Stack | [文档](https://docs.m5stack.com/zh_CN/ai_hardware/LLM-8850_Card) |
 
 ## AXCL
 
@@ -119,8 +126,8 @@ detection num: 6
 ### 网盘资源
 
 - 提供 **ModelZoo**, **预编译程序**, **测试图片** 等内容:
-  - [百度网盘](https://pan.baidu.com/s/1cnMeqsD-hErlRZlBDDvuoA?pwd=oey4)
-  - [Google Drive](https://drive.google.com/drive/folders/1JY59vOFS2qxI8TkVIZ0pHfxHMfKPW5PS?usp=sharing)
+  - [Huggingface](https://huggingface.co/collections/AXERA-TECH/vision-models-67b0bce92ddc61229e8e94ed)
+  - [Modelscope](https://modelscope.cn/organization/AXERA-TECH)
 
 ### NPU 工具链
 
