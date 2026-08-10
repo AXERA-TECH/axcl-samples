@@ -59,3 +59,6 @@ out*/
 3rdparty
 libaxcl
 axcl
+
+# Keep AXCL example sources trackable.
+!examples/axcl/
